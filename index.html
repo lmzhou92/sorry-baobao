@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>你能原谅我吗？🥺</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    body {
+      background-color: #fcecef;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .container {
+      max-width: 400px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .image-container {
+      width: 170px;
+      height: 170px;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+
+    .image-container img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    h1 {
+      font-size: 22px;
+      color: #333;
+      margin-bottom: 25px;
+      font-weight: bold;
+      line-height: 1.4;
+      padding: 0 10px;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      width: 100%;
+      min-height: 80px;
+      position: relative;
+    }
+
+    button {
+      border: none;
+      border-radius: 999px;
+      font-weight: bold;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      outline: none;
+      white-space: nowrap;
+    }
+
+    .btn-yes {
+      background-color: #e8557a;
+      color: white;
+      padding: 12px 32px;
+      font-size: 18px;
+      box-shadow: 0 4px 14px rgba(232, 85, 122, 0.4);
+      z-index: 10;
+      transition: transform 0.2s ease, font-size 0.2s ease, padding 0.2s ease;
+    }
+
+    .btn-no {
+      background-color: #7b88d4;
+      color: white;
+      padding: 12px 22px;
+      font-size: 15px;
+      box-shadow: 0 4px 10px rgba(123, 136, 212, 0.3);
+      z-index: 999;
+      touch-action: manipulation;
+    }
+
+    .heart {
+      position: fixed;
+      font-size: 24px;
+      animation: floatUp 2.5s ease-in forwards;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) scale(0.8) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(-600px) scale(1.6) rotate(35deg);
+        opacity: 0;
+      }
+    }
+
+    .success-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      max-width: 400px;
+      width: 100%;
+      z-index: 10;
+    }
+
+    .success-container h2 {
+      font-size: 24px;
+      color: #e8557a;
+      margin-top: 15px;
+      font-weight: bold;
+      line-height: 1.4;
+    }
+
+    .success-container p {
+      font-size: 17px;
+      color: #555;
+      margin-top: 12px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="mainCard">
+    <div class="image-container">
+      <img id="pandaImg" src="https://media.tenor.com/7l6lUu2_u0wAAAAi/tkthao219-bubududu.gif" alt="Pleading Panda">
+    </div>
+
+    <h1 id="questionText">潘荟竹，你能原谅我吗？🥺</h1>
+
+    <div class="btn-group" id="btnBox">
+      <button class="btn-yes" id="yesBtn" onclick="handleYes()">原谅</button>
+      <button class="btn-no" id="noBtn" onclick="dodge(event)" onmouseover="dodge(event)" ontouchstart="dodge(event)">不行</button>
+    </div>
+  </div>
+
+  <div class="success-container" id="successCard">
+    <div class="image-container">
+      <img src="https://media.tenor.com/39a7Wqg6sYkAAAAi/bubu-dudu-happy.gif" alt="Happy Hug Panda">
+    </div>
+    <h2>耶！我就知道宝宝最好啦！🥰</h2>
+    <p>最喜欢荟竹宝贝啦 ❤️<br>以后都听你的，绝不惹你生气！</p>
+  </div>
+
+  <script>
+    const images = [
+      "https://media.tenor.com/7l6lUu2_u0wAAAAi/tkthao219-bubududu.gif",
+      "https://media.tenor.com/K3Z9j90r8GAAAAAi/dudu-crying.gif",
+      "https://media.tenor.com/m_Z4g26Vf_AAAAAi/tkthao219-bubududu.gif",
+      "https://media.tenor.com/J3ZJ8qA1e4UAAAAi/bubu-dudu-crying.gif",
+      "https://media.tenor.com/WbZ65YIeE8sAAAAi/crying-sad.gif"
+    ];
+
+    const questions = [
+      "潘荟竹，你能原谅我吗？🥺",
+      "宝宝，真的不行吗？🥺",
+      "宝贝 求求你啦。。。🥺",
+      "我最可爱的宝宝，我真的知道错啦 😭",
+      "宝宝 ， 不要生气了好不好嘛 🥺",
+      "宝贝，再给一次机会嘛 💔",
+      "好宝宝，原谅我一下下嘛 🥺"
+    ];
+
+    const noTexts = [
+      "不行",
+      "点不到我吧 😜",
+      "不原谅 哼",
+      "略略略 😝",
+      "抓不到我~",
+      "不要嘛 🙈",
+      "还在生气 😤"
+    ];
+
+    let clickCount = 0;
+    let yesScale = 1;
+
+    function moveNoButton() {
+      const noBtn = document.getElementById("noBtn");
+      noBtn.style.position = "fixed";
+
+      const btnWidth = noBtn.offsetWidth || 100;
+      const btnHeight = noBtn.offsetHeight || 45;
+
+      const maxW = window.innerWidth - btnWidth - 30;
+      const maxH = window.innerHeight - btnHeight - 30;
+
+      const randomX = Math.max(15, Math.floor(Math.random() * maxW));
+      const randomY = Math.max(15, Math.floor(Math.random() * maxH));
+
+      noBtn.style.left = randomX + "px";
+      noBtn.style.top = randomY + "px";
+    }
+
+    function dodge(e) {
+      if (e) e.preventDefault();
+      clickCount++;
+
+      const imgElem = document.getElementById("pandaImg");
+      imgElem.src = images[Math.min(clickCount, images.length - 1)];
+
+      const qText = document.getElementById("questionText");
+      qText.innerText = questions[Math.min(clickCount, questions.length - 1)];
+
+      const noBtn = document.getElementById("noBtn");
+      noBtn.innerText = noTexts[Math.min(clickCount, noTexts.length - 1)];
+      moveNoButton();
+
+      yesScale = Math.min(yesScale + 0.35, 2.6);
+      const yesBtn = document.getElementById("yesBtn");
+      yesBtn.style.transform = `scale(${yesScale})`;
+    }
+
+    function handleYes() {
+      document.getElementById("mainCard").style.display = "none";
+      const noBtn = document.getElementById("noBtn");
+      if (noBtn) noBtn.style.display = "none";
+      
+      const successCard = document.getElementById("successCard");
+      successCard.style.display = "flex";
+
+      for (let i = 0; i < 30; i++) {
+        setTimeout(() => {
+          createHeart();
+        }, i * 90);
+      }
+    }
+
+    function createHeart() {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      const icons = ["❤️", "💖", "💕", "🥰", "🌸", "✨"];
+      heart.innerText = icons[Math.floor(Math.random() * icons.length)];
+      heart.style.left = Math.random() * (window.innerWidth - 30) + "px";
+      heart.style.bottom = "0px";
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 2500);
+    }
+  </script>
+</body>
+</html>
